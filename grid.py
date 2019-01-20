@@ -191,9 +191,10 @@ class NeighboringNodes:
                 return coordinates
       
 if __name__ == "__main__":
-  nodi = NeighboringNodes(8,False)
+  nodi = NeighboringNodes(8,True)
   nodi.make_grid()
-  nodi.get_coordinates(1)
+  idx_xy =nodi.get_coordinates(1)
+  print (idx_xy)
   shape_xy = nodi.find_neighbors(2,'diamond', center = [4,4]
   print(shape_xy)
                                  
