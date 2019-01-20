@@ -193,4 +193,9 @@ class NeighboringNodes:
 if __name__ == "__main__":
   nodi = NeighboringNodes(8,False)
   nodi.make_grid()
+  nodi.get_coordinates(1)
+  shape_xy = nodi.find_neighbors(2,'diamond', center = [4,4]
+  print(shape_xy)
+                                 
+  
                 
