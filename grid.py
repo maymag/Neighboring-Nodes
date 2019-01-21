@@ -203,14 +203,13 @@ if __name__ == "__main__":
 
 
     requiredNamed = parser.add_argument_group('arguments')
-    requiredNamed.add_argument('size', help='grid size is required', type =int)
-    requiredNamed.add_argument('shape', help='shape is required')
-    requiredNamed.add_argument('radius', help='shape radius is required', type = int)
-    requiredNamed.add_argument('index', help='index is required', type = int)
-    requiredNamed.add_argument('debug', help='debug is required', type = int)
-    requiredNamed.add_argument('-center_idx', help='either shape center index or center coordinates are required but do not assign both', type = int, default = None)
-    requiredNamed.add_argument('-center', type=int, nargs=2, help='either shape center index or center coordinates are required but do not assign both', default = None)
-
+    requiredNamed.add_argument('size', help='Requires grid size as integer.', type =int)
+    requiredNamed.add_argument('index', help='Requires index as integer.', type = int)
+    requiredNamed.add_argument('debug', help='Requires debug as 1 or 0.', type = int)
+    requiredNamed.add_argument('shape', help='Requires shape as one of square, cross, diamond.')
+    requiredNamed.add_argument('radius', help='Requires shape radius as integer', type = int)
+    requiredNamed.add_argument('-center_idx', help='Assign shape center index as integer. Either center index or center coordinates are required but do not assign both.', type = int, default = None)
+    requiredNamed.add_argument('-center', type=int, nargs=2, help='Assign x and y coordinates of shape center as integers. Either center index or center coordinates are required but do not assign both.', default = None)
 
     args = parser.parse_args()
 
