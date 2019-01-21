@@ -1,3 +1,6 @@
+
+import argparse 
+
 class NeighboringNodes:
     
     def __init__(self, size, debug):
@@ -17,10 +20,11 @@ class NeighboringNodes:
 
             for k in range(0,self.size):
                 (j.append(h))
-            print (j)
+            print ("Grid:{}".format(j))
             
             #debug
             if self.debug == True: 
+                print('Debug!')
                 row = 0
                 col = 0
                 for c,g in enumerate(range(0, self.size**2),0):
@@ -31,7 +35,7 @@ class NeighboringNodes:
                     y = self.size-row
                     i = c
                     
-                    print((x,y,i))
+                    print(x,y,i)
                     col+=1
 
             
@@ -49,17 +53,17 @@ class NeighboringNodes:
     
 
     
-    def find_neighbors (self, radius, ttype, index=None,center=None):
+    def find_neighbors (self, radius, ttype, center_idx=None,center=None):
         
         '''Method for finding neighboring nodes based on radius, shape of neighborhood, and center node index or coordinates.'''
         
         Valid_Type = {'square','cross','diamond'}
         
-        if center and index:
-            raise ValueError("Use default value for index or center.")
+        if center and center_idx:
+            raise ValueError("Use default value for either center_idx or center.")
             
-        elif not center and not index:
-            raise ValueError ("Assign non-zero value to index or center.")
+        elif not center and not center_idx:
+            raise ValueError ("Assign non-zero value to either center_idx or center.")
         
         elif type(self.size) is not int or self.size <= 0:
             raise ValueError("Size must be a positive integer.")
@@ -68,14 +72,14 @@ class NeighboringNodes:
             raise ValueError("ttype must be one of %r." % Valid_Type)          
                 
         elif type(radius) is not int or radius < 0 or radius > self.size/2:
-            raise ValueError('Radius must be a positive integer less than or equal to half of the NeighboringNode size.')
+            raise ValueError('Radius must be a positive integer less than or equal to half of the grid size.')
             
         
         #Find neighbors
         
-        if index:
+        if center_idx:
         
-            center = nodi.get_coordinates(index)
+            center = nodi.get_coordinates(center_idx)
         
         if ttype == 'square':
 
@@ -148,55 +152,83 @@ class NeighboringNodes:
         
         if ttype == 'diamond':
                 
-                coordinates=[]
-                row = center[1]+radius
-                col = center[0]
+            coordinates=[]
+            row = center[1] + radius
+            col = center[0]
                 
-                #Quick check to make sure shape is not off-the-grid
-                if center[0]+radius < self.size and center[1]+radius < self.size and center[0]-radius > 0 and center[1]-radius > 0:
+            #Quick check to make sure shape is not off-the-grid
+            if center[0]+radius < self.size and center[1]+radius < self.size and center[0]-radius > 0 and center[1]-radius > 0:
                     
-                    #Coordinates for top triangle
-                    for c,g in enumerate(range(0, (radius+1)),0):
-                        exes = list(range(col-c,col+1+c))
-                        ys = len(exes)*[row]
-                        coordinates.extend([[i,j] for (i,j) in zip(exes,ys)])
-                        row-=1
+                #Coordinates for top triangle
+                for c,g in enumerate(range(0, (radius+1)),0):
+                    exes = list(range(col-c,col+1+c))
+                    ys = len(exes)*[row]
+                    coordinates.extend([[i,j] for (i,j) in zip(exes,ys)])
+                    row-=1
                     
-                    #Coordinates for bottom triangle
-                    for h in range(0,radius):
-                        exes = list(range(col-(len(exes)//2-1) , col + len(exes)//2))
-                        ys = len(exes)*[row]
-                        coordinates.extend([[i,j] for (i,j) in zip(exes,ys)])
-                        row-=1
+                #Coordinates for bottom triangle
+                for h in range(0,radius):
+                    exes = list(range(col-(len(exes)//2-1) , col + len(exes)//2))
+                    ys = len(exes)*[row]
+                    coordinates.extend([[i,j] for (i,j) in zip(exes,ys)])
+                    row-=1
                     
-                else:
-                    print('Shape is partially or entirely off the grid.')
+            else:
+                print('Shape is partially or entirely off the grid.')
                     
-                    #Coordinates for top triangle
-                    #Remove nodes that are off-the-grid
-                    for c,g in enumerate(range(0, (radius+1)),0):
-                        exes = list(range(col-c,col+1+c))
-                        ys = len(exes)*[row]
-                        coordinates.extend([[i,j] for (i,j) in zip(exes,ys) if i < self.size and j < self.size and i > 0 and j > 0])
-                        row-=1
+                #Coordinates for top triangle
+                #Remove nodes that are off-the-grid
+                for c,g in enumerate(range(0, (radius+1)),0):
+                    exes = list(range(col-c,col+1+c))
+                    ys = len(exes)*[row]
+                    coordinates.extend([[i,j] for (i,j) in zip(exes,ys) if i < self.size and j < self.size and i > 0 and j > 0])
+                    row-=1
                     
-                    #Coordinates for bottom triangle
-                    #Remove nodes that are off-the-grid
-                    for h in range(0,radius):
-                        exes = list(range(col-(len(exes)//2-1) , col + len(exes)//2))
-                        ys = len(exes)*[row]
-                        coordinates.extend([[i,j] for (i,j) in zip(exes,ys) if i < self.size and j < self.size and i > 0 and j > 0])
-                        row-=1
+                #Coordinates for bottom triangle
+                #Remove nodes that are off-the-grid
+                for h in range(0,radius):
+                    exes = list(range(col-(len(exes)//2-1) , col + len(exes)//2))
+                    ys = len(exes)*[row]
+                    coordinates.extend([[i,j] for (i,j) in zip(exes,ys) if i < self.size and j < self.size and i > 0 and j > 0])
+                    row-=1
                     
-                return coordinates
+            return coordinates
       
 if __name__ == "__main__":
-  nodi = NeighboringNodes(8,True)
-  nodi.make_grid()
-  idx_xy =nodi.get_coordinates(1)
-  print (idx_xy)
-  shape_xy = nodi.find_neighbors(2,'diamond', center = [4,4]
-  print(shape_xy)
+
+
+
+    parser = argparse.ArgumentParser(description='MyGridStuff')
+
+
+
+    requiredNamed = parser.add_argument_group('arguments')
+    requiredNamed.add_argument('size', help='grid size is required', type =int)
+    requiredNamed.add_argument('shape', help='shape is required')
+    requiredNamed.add_argument('radius', help='shape radius is required', type = int)
+    requiredNamed.add_argument('index', help='index is required', type = int)
+    requiredNamed.add_argument('debug', help='debug is required', type = int)
+    requiredNamed.add_argument('-center_idx', help='either shape center index or center coordinates are required but do not assign both', type = int, default = None)
+    #requiredNamed.add_argument('-center', help='either shape center index or center coordinates are required but do not assign both', action = 'append',nargs =2, default = None)
+    requiredNamed.add_argument('-center', type=int, nargs=2, help='either shape center index or center coordinates are required but do not assign both', default = None)
+
+
+
+    args = parser.parse_args()
+    #print("size: " + args.size)
+    #print("shape: " + args.shape)
+    #print("radius: " + args.radius)
+
+
+
+    nodi = NeighboringNodes(args.size,args.debug)
+    nodi.make_grid()
+    idx_xy =nodi.get_coordinates(args.index)
+    print ("Coordinates of this node index are {}".format(idx_xy))
+    shape_xy = nodi.find_neighbors(args.radius,args.shape, args.center_idx, args.center)
+    print("Coordinates of this shape are {}".format(shape_xy))  
+
+
                                  
   
                 
