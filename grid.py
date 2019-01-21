@@ -209,17 +209,10 @@ if __name__ == "__main__":
     requiredNamed.add_argument('index', help='index is required', type = int)
     requiredNamed.add_argument('debug', help='debug is required', type = int)
     requiredNamed.add_argument('-center_idx', help='either shape center index or center coordinates are required but do not assign both', type = int, default = None)
-    #requiredNamed.add_argument('-center', help='either shape center index or center coordinates are required but do not assign both', action = 'append',nargs =2, default = None)
     requiredNamed.add_argument('-center', type=int, nargs=2, help='either shape center index or center coordinates are required but do not assign both', default = None)
 
 
-
     args = parser.parse_args()
-    #print("size: " + args.size)
-    #print("shape: " + args.shape)
-    #print("radius: " + args.radius)
-
-
 
     nodi = NeighboringNodes(args.size,args.debug)
     nodi.make_grid()
